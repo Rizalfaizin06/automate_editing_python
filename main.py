@@ -12,6 +12,7 @@ def convert_to_1x1(clip):
     y_center = (clip.size[1] - new_height) / 2
     return clip.crop(x_center, y_center, x_center + new_width, y_center + new_height)
 
+
 new_width, new_height = 1080, 1920
 
 def resize_frame(frame):
@@ -44,15 +45,20 @@ def process_videos():
         input_path = os.path.join(input_folder, video_file)
         output_path = os.path.join(output_folder, "processed_" + video_file)
         
+        log_text.insert(tk.END, f"Processing {video_file}...\n")
+        log_text.update()  # Update the text widget to show the message
+        
         clip = VideoFileClip(input_path).subclip(1, 3)
         resized_clip = clip.fl_image(resize_frame)
         
         final_clip = convert_to_1x1(resized_clip).speedx(2)
-        final_clip.write_videofile(output_path)
+        final_clip.write_videofile(output_path, logger=None)
         
         log_text.insert(tk.END, f"{video_file} processed successfully.\n")
+        log_text.update()  # Update the text widget to show the message
 
     log_text.insert(tk.END, "All videos processed successfully.\n")
+    log_text.update()  # Update the text widget to show the message
 
 # GUI for selecting input and output folders
 root = tk.Tk()
